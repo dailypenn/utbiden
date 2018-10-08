@@ -1,0 +1,21 @@
+#title {
+  color: black;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+}
+
+#game {
+  width: 1400px;
+  height: 500px;
+  background-color: blue;
+  margin: 0 auto;
+}
+
+#stats-panel {
+  color: red;
+  font-family: arial;
+  font-size: 50px;
+  z-index: 2000;
+}
