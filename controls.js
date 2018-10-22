@@ -1,4 +1,4 @@
-var context, controller, joe, score, lives, items, item, loop;
+var canvas, ctx, controller, joe, score, lives, items, item, loop;
 var maxVelocity = 10; // velocity of background image
 var targetFPS = 33;
 var backgroundImageX = 0;
@@ -15,155 +15,170 @@ coneImage.src = 'assets/images/icecream.png';
 squirrelImage = new Image();
 squirrelImage.src = 'assets/images/squirrel.jpg';
 
+$(function(){
 
-function init() {
-  context = document.querySelector("canvas").getContext("2d");
+    // get a refrence to the canvas and its context
+    canvas=document.getElementById("canvas");
+    ctx=canvas.getContext("2d");
+    ctx.canvas.height = 500;
+    ctx.canvas.width = 1400;
+    canvasHeight = ctx.canvas.height;
+    canvasWidth = ctx.canvas.width;
 
-  context.canvas.height = 500;
-  context.canvas.width = 1400;
-  canvasHeight = context.canvas.height;
-  canvasWidth = context.canvas.width;
+    var spawnRateOfX= 10;
+    var objects=[];
 
-  joe = {
-    width:150,
-    height:200,
-    x:100,
-    y:0,
-    x_velocity:0,
-    y_velocity:0,
-    jumping:true,
-    image:joeImage
-  };
+    joe = {
+      width:150,
+      height:200,
+      x:100,
+      y:0,
+      x_velocity:0,
+      y_velocity:0,
+      jumping:true,
+      image:joeImage
+    };
 
-  controller = {
-    up:false,
-    keyListener:function(event) {
-      var key_state = (event.type == "keydown") ? true : false;
-      if (event.keyCode === 38) controller.up = key_state;
+    controller = {
+      up:false,
+      keyListener:function(event) {
+        var key_state = (event.type == "keydown") ? true : false;
+        if (event.keyCode === 38) controller.up = key_state;
+      }
+    };
+
+    items = [
+      {
+        type: 'cone',
+        x:canvasWidth,
+        y:canvasHeight - 180,
+        height:60,
+        width:40,
+        image: coneImage
+      },
+      {
+        type: 'squirrel',
+        x:canvasWidth,
+        y:canvasHeight - 180,
+        height:60,
+        width:40,
+        image: squirrelImage
+      }
+    ];
+
+    score = 0;
+    lives = 3;
+
+    var scoreElement = document.getElementById('score');
+    scoreElement.innerHTML = 'Score: ' + score;
+
+    var livesElement = document.getElementById('lives');
+    livesElement.innerHTML = 'Lives: ' + lives;
+
+    window.addEventListener("keydown", controller.keyListener);
+    window.addEventListener("keyup", controller.keyListener);
+
+    animate();
+
+    function spawnRandomObject() {
+        var item = items[Math.floor(Math.random()*items.length)];
+        objects.push(item);
     }
-  };
 
-  items = [
-    {
-      type: 'cone',
-      x:1000,
-      y:canvasHeight - 180,
-      height:60,
-      width:30,
-      image: coneImage
-    },
-    {
-      type: 'squirrel',
-      x:1000,
-      y:canvasHeight - 180,
-      height:60,
-      width:30,
-      image: squirrelImage
+    function drawBackground() {
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+      // draw twice to cover wrap around
+      ctx.drawImage(backgroundImage, backgroundImageX, 0, canvasWidth, canvasHeight);
+      ctx.drawImage(backgroundImage, backgroundImageX + canvasWidth, 0, canvasWidth, canvasHeight);
+      ctx.fillStyle = "rgba(255,255,255,0.1)";
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
     }
-  ];
 
-  score = 0;
-  lives = 3;
-}
-
-function draw() {
-  //  draw background image
-  context.globalAlpha = 1;
-  context.globalCompositeOperation = 'source-over';
-  // draw twice to cover wrap around
-  context.drawImage(backgroundImage, backgroundImageX, 0, canvasWidth, canvasHeight);
-  context.drawImage(backgroundImage, backgroundImageX + canvasWidth, 0, canvasWidth, canvasHeight);
-  context.fillStyle = "rgba(255,255,255,0.1)";
-  context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-  // draw joe on scooter
-  context.drawImage(joe.image, joe.x, joe.y, joe.width, joe.height);
-
-  var scoreElement = document.getElementById('score');
-  scoreElement.innerHTML = 'Score: ' + score;
-
-  var livesElement = document.getElementById('lives');
-  livesElement.innerHTML = 'Lives: ' + lives;
-}
-
-function incrementScore() {
-  score++;
-  var scoreElement = document.getElementById('score');
-  scoreElement.innerHTML = 'Score: ' + score;
-}
-
-function decrementLives() {
-  lives--;
-  // if lives = 0 end game
-  if (lives === 0) {
-
-  }
-  var livesElement = document.getElementById('lives');
-  livesElement.innerHTML = 'Lives: ' + lives;
-}
-
-function spawnItem() {
-  item = items[Math.floor(Math.random()*items.length)];
-  console.log('spawned: ' + item.type);
-  context.drawImage(item.image, item.x, item.y, item.width, item.height);
-}
-
-function update() {
-  var spawnedItem = false;
-  var rand = Math.random()*10;
-  if (rand > 7) {
-    spawnItem();
-    spawnedItem = true;
-  }
-  // incrementally change image position of background to scroll left
-  backgroundImageX -= maxVelocity;
-  if (backgroundImageX < -canvasWidth) {
-    backgroundImageX += canvasWidth;
-  }
-
-  // move items across screen
-  if (spawnedItem) {
-    item.x -= maxVelocity;
-  }
-
-  // if joe eats ice cream increment score, otherwise lose a life
-  if (spawnedItem && hasCollided()) {
-    if (item.type === 'cone') {
-      incrementScore();
-    } else {
-      decrementLives();
+    function drawJoeBiden() {
+        ctx.drawImage(joe.image, joe.x, joe.y, joe.width, joe.height);
     }
-  }
 
-  if (controller.up && joe.jumping === false) {
-    joe.y_velocity -= 30;
-    joe.jumping = true;
-  }
+    function removeItem(item) {
+      for (var i = 0; i < objects.length; i++) {
+        var object = objects[i];
+        if (object === item) {
+          objects.splice(i, 1);
+          break;
+        }
+      }
+    }
+    function animate(){
+        // randomly spawn objects
+        var randomTime = Math.random()*10;
+        if (randomTime > 9.9) {
+          spawnRandomObject();
+        }
 
-  joe.y_velocity += 2;// gravity
-  joe.y += joe.y_velocity;
-  joe.y_velocity *= 0.98;// friction
+        // continually loop background image
+        backgroundImageX -= maxVelocity;
+        if (backgroundImageX < -canvasWidth) {
+          backgroundImageX += canvasWidth;
+        }
 
-  // detect collision between joe and ground
-  if (joe.y > 250) {
-    joe.jumping = false;
-    joe.y = 250;
-    joe.y_velocity = 0;
-  }
-}
+        // request another animation frame
+        requestAnimationFrame(animate);
 
-function hasCollided() {
-  var xdiff = item.x - joe.x;
-  //var ydiff = Math.abs(cone.y - joeBody.y);
-  return (xdiff <= 10 && xdiff >= 0) ? true : false;
-}
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        drawBackground();
+        drawJoeBiden();
 
-init();
+        if (controller.up && joe.jumping === false) {
+          joe.y_velocity -= 30;
+          joe.jumping = true;
+        }
 
-setInterval(function() {
-    update();
-    draw();
-}, 1000 / targetFPS);
+        joe.y_velocity += 1.5;// gravity
+        joe.y += joe.y_velocity;
+        joe.y_velocity *= 0.98;// friction
 
-window.addEventListener("keydown", controller.keyListener);
-window.addEventListener("keyup", controller.keyListener);
+        // detect collision between joe and ground
+        if (joe.y > 250) {
+          joe.jumping = false;
+          joe.y = 250;
+          joe.y_velocity = 0;
+        }
+
+        // move each object down the canvas
+        for(var i = 0; i < objects.length; i++) {
+            var object = objects[i];
+            object.x -= spawnRateOfX;
+            ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
+
+            // check for collisions
+            if (object.x - joe.x <= 10 && object.x - joe.x > 0 && Math.abs(object.y - joe.y) <= 70 && object.y - joe.y > 0) {
+              if (object.type === 'cone') {
+                incrementScore();
+              } else if (object.type === 'squirrel') {
+                decrementLives();
+              }
+            }
+
+            if (object.x < 0) {
+              removeItem(object);
+              object.x = canvasWidth; // reset starting position of object
+            }
+        }
+
+        function incrementScore() {
+          score++;
+          var scoreElement = document.getElementById('score');
+          scoreElement.innerHTML = 'Score: ' + score;
+        }
+
+        function decrementLives() {
+          lives--;
+
+          if (lives === 0) { // end game
+
+          }
+          var livesElement = document.getElementById('lives');
+          livesElement.innerHTML = 'Lives: ' + lives;
+        }
+    }
+});
