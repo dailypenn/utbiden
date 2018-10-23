@@ -6,14 +6,15 @@
   <link rel="stylesheet" href="style.css"></link>
 </head>
 <body>
-  <div id="title">Joe Biden Game</div><br>
-  <div id="start-button">Start Game</div>
-  <div id="stats-panel">
-    <div id="score"></div>
-    <div id="lives"></div>
+  <div id="container">
+    <div id="start-menu">
+      <img id="arrow-keys" src="assets/images/arrowkeys.gif"></img>
+      <a id="myButton" onclick="startGame()">Start Playing!</a>
+    </div>
+    <img id="starting-background"></img>
+    <canvas id="canvas"></canvas>
+    <div id="game-over-menu"></div> 
   </div>
-  <canvas id="canvas"></canvas>
-  <div id="controls"></div>
   <script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
   <script type="text/javascript" src="controls.js"></script>
 </body>
