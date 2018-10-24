@@ -62,7 +62,13 @@ canvas.addEventListener('click', function(event) {
       pauseStart = true;
       startGame();
     } else if (currentButton === 'pauseButton') {
-      pauseLoop = true; 
+      pauseLoop = true;
+      drawResumeButton();
+      currentButton = 'resumeButton';
+    } else if (currentButton === 'resumeButton') {
+      currentButton = 'pauseButton'; 
+      pauseLoop = false;
+      gameLoop();
     }
   }
 });
@@ -166,6 +172,16 @@ function drawPauseButton() {
   ctx.fillStyle = "white";
   ctx.font = "20pt Arial";
   ctx.fillText("Pause Game", 1250, 25);
+}
+
+function drawResumeButton() {
+  // button size
+  buttonX = 550;
+  buttonY = 200;
+  buttonW = 250;
+  buttonH = 115;
+
+  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
 }
 
 function removeItem(item) {
