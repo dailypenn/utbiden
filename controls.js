@@ -7,6 +7,12 @@ var canvasWidth;
 var scooterSound;
 var pauseLoop;
 var bounce = true;
+var pauseStart = false;
+var buttonX;
+var buttonY;
+var buttonW;
+var buttonH;
+var currentButton;
 
 // load images
 backgroundImage = new Image();
@@ -17,6 +23,9 @@ coneImage = new Image();
 coneImage.src = 'assets/images/icecream.png';
 squirrelImage = new Image();
 squirrelImage.src = 'assets/images/squirrel.jpg';
+startButton = new Image();
+startButton.src = 'assets/images/start-button.png';
+
 
 // load sounds
 themeSound = document.createElement("audio");
@@ -39,13 +48,29 @@ ctx.canvas.width = 1400;
 canvasHeight = ctx.canvas.height;
 canvasWidth = ctx.canvas.width;
 
-var startingBackground = document.getElementById("starting-background");
-startingBackground.src = "assets/images/locustwalk.jpg";
-startingBackground.width = canvasWidth;
-startingBackground.height = canvasHeight;
-startingBackground.style.opacity = 0.5;
+canvas.addEventListener('click', function(event) {
+  // Control that click event occurred within position of button
+  // NOTE: This assumes canvas element is positioned at top left corner
+  if (
+    event.x > buttonX &&
+    event.x < buttonX + buttonW &&
+    event.y > buttonY &&
+    event.y < buttonY + buttonH
+  ) {
+    // Executes if button was clicked!
+    if (currentButton === 'startButton') {
+      pauseStart = true;
+      startGame();
+    } else if (currentButton === 'pauseButton') {
+      pauseLoop = true; 
+    }
+  }
+});
 
-var spawnRateOfX= 10;
+if (!pauseStart) {
+  runBackground();
+}
+
 var objects = [];
 var score = 0;
 var lives = 3;
@@ -118,6 +143,31 @@ function drawJoeBiden() {
   ctx.drawImage(joe.image, joe.x, joe.y, joe.width, joe.height);
 }
 
+function drawStartButton() {
+  // button size
+  buttonX = 550;
+  buttonY = 200;
+  buttonW = 250;
+  buttonH = 115;
+
+  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
+}
+
+function drawPauseButton() {
+  // button size
+  buttonX = 1250;
+  buttonY = 25;
+  buttonW = 100;
+  buttonH = 40;
+
+  // Render button
+  ctx.fillStyle = 'red';
+  ctx.fillRect(buttonX, buttonY, buttonW, buttonH);
+  ctx.fillStyle = "white";
+  ctx.font = "20pt Arial";
+  ctx.fillText("Pause Game", 1250, 25);
+}
+
 function removeItem(item) {
   for (var i = 0; i < objects.length; i++) {
     var object = objects[i];
@@ -126,6 +176,23 @@ function removeItem(item) {
       break;
     }
   }
+}
+
+function runBackground() {
+  if (pauseStart) {
+    return;
+  }
+  // continually loop background image
+  backgroundImageX -= maxVelocity; // speed of moving background
+  if (backgroundImageX < -canvasWidth) {
+    backgroundImageX += canvasWidth;
+  }
+  requestAnimationFrame(runBackground);
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawBackground();
+  drawStartButton();
+  currentButton = 'startButton';
 }
 
 var v_increase = 0;
@@ -155,6 +222,7 @@ function gameLoop() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
   drawJoeBiden();
+  drawPauseButton();
 
   // draw score and lives
   ctx.fillStyle = "white";
@@ -223,16 +291,12 @@ function gameLoop() {
   }
 
   function startGame() {
-    document.getElementById("starting-background").style.display = "none";
-    document.getElementById("myButton").style.display = "none";
-    document.getElementById("arrow-keys").style.display = "none";
-
     themeSound.play();
     themeSound.loop = true;
-
     scooterSound.play();
     scooterSound.loop = true;
     pauseLoop = false;
+    currentButton = 'pauseButton';
     gameLoop();
   }
 
