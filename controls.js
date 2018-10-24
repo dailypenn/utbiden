@@ -57,7 +57,7 @@ canvas.addEventListener('click', function(event) {
     event.y > buttonY &&
     event.y < buttonY + buttonH
   ) {
-    // Executes if button was clicked!
+    // button logic
     if (currentButton === 'startButton') {
       pauseStart = true;
       startGame();
@@ -66,9 +66,14 @@ canvas.addEventListener('click', function(event) {
       drawResumeButton();
       currentButton = 'resumeButton';
     } else if (currentButton === 'resumeButton') {
-      currentButton = 'pauseButton'; 
       pauseLoop = false;
+      currentButton = 'pauseButton';
       gameLoop();
+    } else if (currentButton === 'playAgain') {
+      // reset lives and score variables
+      lives = 3;
+      score = 0;
+      startGame(); 
     }
   }
 });
@@ -175,6 +180,16 @@ function drawPauseButton() {
 }
 
 function drawResumeButton() {
+  // button size
+  buttonX = 550;
+  buttonY = 200;
+  buttonW = 250;
+  buttonH = 115;
+
+  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
+}
+
+function drawPlayAgainButton() {
   // button size
   buttonX = 550;
   buttonY = 200;
@@ -328,4 +343,7 @@ function gameLoop() {
     ctx.font = "bold 30px Arial";
     ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
     (canvas.width / 2 - 250), (canvas.height / 2));
+
+    drawPlayAgainButton();
+    currentButton = 'playAgain';
   }
