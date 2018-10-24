@@ -5,9 +5,10 @@ var backgroundImageX = 0;
 var canvasHeight;
 var canvasWidth;
 var scooterSound;
-var pauseAnimate;
+var pauseLoop;
+var bounce = true;
 
-// preload image variables
+// load images
 backgroundImage = new Image();
 backgroundImage.src = 'assets/images/locustwalk.jpg';
 joeImage = new Image();
@@ -17,10 +18,20 @@ coneImage.src = 'assets/images/icecream.png';
 squirrelImage = new Image();
 squirrelImage.src = 'assets/images/squirrel.jpg';
 
-// scooterSound = document.createElement("audio");
-// scooterSound.src = "assets/sounds/scooter.wav";
-// scooterSound.play();
-//   scooterSound.loop = true;
+// load sounds
+theme = document.createElement("audio");
+theme.src = "assets/sounds/themesong.wav";
+theme.play();
+theme.loop = true;
+
+scooterSound = document.createElement("audio");
+scooterSound.src = "assets/sounds/scooter.wav";
+
+collectSound = document.createElement("audio");
+collectSound.src = "assets/sounds/collect.wav";
+
+bounceSound = document.createElement("audio");
+bounceSound.src = "assets/sounds/bounce.wav";
 
 // get reference to the canvas and its context
 canvas = document.getElementById("canvas");
@@ -82,7 +93,6 @@ items = [
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
 
-
 function spawnRandomObject() {
   var item = items[Math.floor(Math.random()*items.length)];
   var itemClone = {
@@ -93,7 +103,6 @@ function spawnRandomObject() {
     width:item.width,
     image:item.image
   }
-
   objects.push(itemClone);
 }
 
@@ -121,8 +130,8 @@ function removeItem(item) {
   }
 }
 
-function animate() {
-  if (pauseAnimate) {
+function gameLoop() {
+  if (pauseLoop) {
     return;
   }
   // randomly spawn objects
@@ -138,7 +147,7 @@ function animate() {
   }
 
   // request another animation frame
-  requestAnimationFrame(animate);
+  requestAnimationFrame(gameLoop);
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
@@ -153,6 +162,7 @@ function animate() {
   if (controller.up && joe.jumping === false) {
     joe.y_velocity -= 30;
     joe.jumping = true;
+    bounce = true;
   }
 
   joe.y_velocity += 1.5;// gravity
@@ -164,24 +174,32 @@ function animate() {
     joe.jumping = false;
     joe.y = 250;
     joe.y_velocity = 0;
+    if (bounce) {
+      joe.y_velocity -= 5; // bounce intensity
+      joe.jumping = true;
+      bounce = false;
+      bounceSound.play();
+    }
   }
 
   // move each object down the canvas
-  for(var i = 0; i < objects.length; i++) {
+  for (var i = 0; i < objects.length; i++) {
     var object = objects[i];
     object.x -= spawnRateOfX;
     ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
 
-    // check for collisions
-    if (object.x - joe.x <= 10 && object.x - joe.x > 0 && Math.abs(object.y - joe.y) <= 70) {
+    // check for collisions, set collision radii
+    if (object.x - joe.x <= 90 && object.x - joe.x > 0 &&
+      Math.abs(object.y - joe.y) <= 220) {
         if (object.type === 'cone') {
+          collectSound.play();
           incrementScore();
         } else if (object.type === 'squirrel') {
           decrementLives();
         }
         object.image = ''; // clear image after colliding
         removeItem(object);
-    }
+      }
 
       if (object.x < 0) {
         removeItem(object);
@@ -196,7 +214,7 @@ function animate() {
   function decrementLives() {
     lives--;
     if (lives === 0) { // end game
-      pauseAnimate = true;
+      pauseLoop = true;
       gameOver();
     }
   }
@@ -205,11 +223,15 @@ function animate() {
     document.getElementById("starting-background").style.display = "none";
     document.getElementById("myButton").style.display = "none";
     document.getElementById("arrow-keys").style.display = "none";
-    pauseAnimate = false;
-    animate();
+
+    scooterSound.play();
+    scooterSound.loop = true;
+    pauseLoop = false;
+    gameLoop();
   }
 
   function gameOver() {
+    scooterSound.pause();
     // darken background image by applying black overlay
     ctx.beginPath();
     ctx.rect(0, 0, canvasWidth, canvasHeight);
