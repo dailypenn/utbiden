@@ -19,10 +19,8 @@ squirrelImage = new Image();
 squirrelImage.src = 'assets/images/squirrel.jpg';
 
 // load sounds
-theme = document.createElement("audio");
-theme.src = "assets/sounds/themesong.wav";
-theme.play();
-theme.loop = true;
+themeSound = document.createElement("audio");
+themeSound.src = "assets/sounds/themesong.wav";
 
 scooterSound = document.createElement("audio");
 scooterSound.src = "assets/sounds/scooter.wav";
@@ -130,7 +128,12 @@ function removeItem(item) {
   }
 }
 
+var v_increase = 0;
 function gameLoop() {
+  v_increase++;
+  if (v_increase > 200 && v_increase % 200 === 0) {
+    maxVelocity += 0.1;
+  }
   if (pauseLoop) {
     return;
   }
@@ -141,7 +144,7 @@ function gameLoop() {
   }
 
   // continually loop background image
-  backgroundImageX -= maxVelocity;
+  backgroundImageX -= maxVelocity; // speed of moving background
   if (backgroundImageX < -canvasWidth) {
     backgroundImageX += canvasWidth;
   }
@@ -185,7 +188,7 @@ function gameLoop() {
   // move each object down the canvas
   for (var i = 0; i < objects.length; i++) {
     var object = objects[i];
-    object.x -= spawnRateOfX;
+    object.x -= maxVelocity;
     ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
 
     // check for collisions, set collision radii
@@ -223,6 +226,9 @@ function gameLoop() {
     document.getElementById("starting-background").style.display = "none";
     document.getElementById("myButton").style.display = "none";
     document.getElementById("arrow-keys").style.display = "none";
+
+    themeSound.play();
+    themeSound.loop = true;
 
     scooterSound.play();
     scooterSound.loop = true;
