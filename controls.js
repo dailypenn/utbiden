@@ -30,13 +30,10 @@ startButton.src = 'assets/images/start-button.png';
 // load sounds
 themeSound = document.createElement("audio");
 themeSound.src = "assets/sounds/themesong.wav";
-
 scooterSound = document.createElement("audio");
 scooterSound.src = "assets/sounds/scooter.wav";
-
 collectSound = document.createElement("audio");
 collectSound.src = "assets/sounds/collect.wav";
-
 bounceSound = document.createElement("audio");
 bounceSound.src = "assets/sounds/bounce.wav";
 
@@ -58,12 +55,8 @@ canvas.addEventListener('click', function(event) {
     event.y < buttonY + buttonH
   ) {
     // button logic
-    if (currentButton === 'startButton') {
-      pauseStart = true;
-      startGame();
-    } else if (currentButton === 'pauseButton') {
+    if (currentButton === 'pauseButton') {
       pauseLoop = true;
-      drawResumeButton();
       currentButton = 'resumeButton';
     } else if (currentButton === 'resumeButton') {
       pauseLoop = false;
@@ -73,7 +66,7 @@ canvas.addEventListener('click', function(event) {
       // reset lives and score variables
       lives = 3;
       score = 0;
-      startGame(); 
+      startGame();
     }
   }
 });
@@ -101,9 +94,17 @@ controller = {
   up:false,
   keyListener:function(event) {
     var key_state = (event.type == "keydown") ? true : false;
-    if (event.keyCode === 38) controller.up = key_state;
+    if (event.keyCode === 38) {
+      controller.up = key_state;
+    }
   }
 };
+
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+        pauseGame();
+    }
+}
 
 items = [
   {
@@ -155,31 +156,6 @@ function drawJoeBiden() {
 }
 
 function drawStartButton() {
-  // button size
-  buttonX = 550;
-  buttonY = 200;
-  buttonW = 250;
-  buttonH = 115;
-
-  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
-}
-
-function drawPauseButton() {
-  // button size
-  buttonX = 1250;
-  buttonY = 25;
-  buttonW = 100;
-  buttonH = 40;
-
-  // Render button
-  ctx.fillStyle = 'red';
-  ctx.fillRect(buttonX, buttonY, buttonW, buttonH);
-  ctx.fillStyle = "white";
-  ctx.font = "20pt Arial";
-  ctx.fillText("Pause Game", 1250, 25);
-}
-
-function drawResumeButton() {
   // button size
   buttonX = 550;
   buttonY = 200;
@@ -253,7 +229,6 @@ function gameLoop() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
   drawJoeBiden();
-  drawPauseButton();
 
   // draw score and lives
   ctx.fillStyle = "white";
@@ -328,7 +303,12 @@ function gameLoop() {
     scooterSound.loop = true;
     pauseLoop = false;
     currentButton = 'pauseButton';
+    pauseStart = true;
     gameLoop();
+  }
+
+  function pauseGame() {
+    pauseLoop = true; 
   }
 
   function gameOver() {

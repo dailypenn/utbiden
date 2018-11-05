@@ -59,6 +59,11 @@
 
 }
 
+button {
+  background-color: grey;
+  color: white;
+}
+
 #game-over-menu {
   display: none;
   position: absolute;
