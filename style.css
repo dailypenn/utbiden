@@ -64,6 +64,14 @@ button {
   color: white;
 }
 
+#pause {
+  display: none;
+}
+
+#resume {
+  display: none;
+}
+
 #game-over-menu {
   display: none;
   position: absolute;

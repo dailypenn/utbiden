@@ -1,18 +1,14 @@
-var canvas, ctx, controller, joe, items;
+var canvas, ctx, canvasHeight, canvasWidth, controller, joe, pauseLoop, items;
 var maxVelocity = 10; // velocity of background image
 var targetFPS = 33;
 var backgroundImageX = 0;
-var canvasHeight;
-var canvasWidth;
-var scooterSound;
-var pauseLoop;
 var bounce = true;
 var pauseStart = false;
-var buttonX;
-var buttonY;
-var buttonW;
-var buttonH;
-var currentButton;
+var buttonX, buttonY, buttonW, buttonH;
+var currentButton = 'startGame';
+var objects = [];
+var score = 0;
+var lives = 3;
 
 // load images
 backgroundImage = new Image();
@@ -20,12 +16,13 @@ backgroundImage.src = 'assets/images/locustwalk.jpg';
 joeImage = new Image();
 joeImage.src = 'assets/images/joe+scooter.png';
 coneImage = new Image();
-coneImage.src = 'assets/images/icecream.png';
+coneImage.src = 'assets/images/ice-cream-cone.png';
 squirrelImage = new Image();
-squirrelImage.src = 'assets/images/squirrel.jpg';
+squirrelImage.src = 'assets/images/squirrel.png';
+newsImage = new Image();
+newsImage.src = 'assets/images/dp-newsstand.png';
 startButton = new Image();
 startButton.src = 'assets/images/start-button.png';
-
 
 // load sounds
 themeSound = document.createElement("audio");
@@ -45,23 +42,16 @@ ctx.canvas.width = 1400;
 canvasHeight = ctx.canvas.height;
 canvasWidth = ctx.canvas.width;
 
+// on canvas buttons
 canvas.addEventListener('click', function(event) {
-  // Control that click event occurred within position of button
-  // NOTE: This assumes canvas element is positioned at top left corner
   if (
     event.x > buttonX &&
     event.x < buttonX + buttonW &&
     event.y > buttonY &&
     event.y < buttonY + buttonH
   ) {
-    // button logic
-    if (currentButton === 'pauseButton') {
-      pauseLoop = true;
-      currentButton = 'resumeButton';
-    } else if (currentButton === 'resumeButton') {
-      pauseLoop = false;
-      currentButton = 'pauseButton';
-      gameLoop();
+    if (currentButton === 'startGame') {
+      startGame();
     } else if (currentButton === 'playAgain') {
       // reset lives and score variables
       lives = 3;
@@ -74,10 +64,6 @@ canvas.addEventListener('click', function(event) {
 if (!pauseStart) {
   runBackground();
 }
-
-var objects = [];
-var score = 0;
-var lives = 3;
 
 joe = {
   width:150,
@@ -92,44 +78,63 @@ joe = {
 
 controller = {
   up:false,
-  keyListener:function(event) {
-    var key_state = (event.type == "keydown") ? true : false;
-    if (event.keyCode === 38) {
+  keyListener:function (e) {
+    var key_state = (e.type == "keydown") ? true : false;
+    var start = 0;
+    if (e.keyCode === 38) {
       controller.up = key_state;
     }
   }
 };
-
-document.body.onkeyup = function(e){
-    if(e.keyCode == 32){
-        pauseGame();
-    }
-}
 
 items = [
   {
     type: 'cone',
     x:canvasWidth,
     y:canvasHeight - 180,
-    height:60,
-    width:40,
+    height:70,
+    width:50,
     image: coneImage
   },
   {
     type: 'squirrel',
     x:canvasWidth,
-    y:canvasHeight - 180,
-    height:60,
-    width:40,
+    y:canvasHeight - 115,
+    height:67,
+    width:67,
     image: squirrelImage
+  },
+  {
+    type: 'newsstand',
+    x:canvasWidth,
+    y:canvasHeight - 120,
+    height:80,
+    width:70,
+    image: newsImage
   }
 ];
 
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
 
+function playAllSounds() {
+  themeSound.play();
+  themeSound.loop = true;
+  scooterSound.play();
+  scooterSound.loop = true;
+}
+
+function pauseAllSounds() {
+  themeSound.pause();
+  scooterSound.pause();
+  collectSound.pause();
+  bounceSound.pause();
+}
+
 function spawnRandomObject() {
   var item = items[Math.floor(Math.random()*items.length)];
+  // check item probability
+  // if satisfies some condition do rest 
   var itemClone = {
     type:item.type,
     x:item.x,
@@ -199,14 +204,19 @@ function runBackground() {
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
   drawStartButton();
-  currentButton = 'startButton';
+}
+
+function jump() {
+  joe.y_velocity -= 30;
+  joe.jumping = true;
+  bounce = true;
 }
 
 var v_increase = 0;
 function gameLoop() {
   v_increase++;
   if (v_increase > 200 && v_increase % 200 === 0) {
-    maxVelocity += 0.1;
+    maxVelocity += 0.3;
   }
   if (pauseLoop) {
     return;
@@ -237,9 +247,7 @@ function gameLoop() {
   (canvas.width / 2) - 650, (canvas.height / 2) - 200);
 
   if (controller.up && joe.jumping === false) {
-    joe.y_velocity -= 30;
-    joe.jumping = true;
-    bounce = true;
+    jump();
   }
 
   joe.y_velocity += 1.5;// gravity
@@ -273,6 +281,9 @@ function gameLoop() {
           incrementScore();
         } else if (object.type === 'squirrel') {
           decrementLives();
+        } else if (object.type === 'newsstand') {
+          collectSound.play();
+          incrementLives();
         }
         object.image = ''; // clear image after colliding
         removeItem(object);
@@ -296,19 +307,32 @@ function gameLoop() {
     }
   }
 
+  function incrementLives() {
+    lives++;
+  }
+
   function startGame() {
-    themeSound.play();
-    themeSound.loop = true;
-    scooterSound.play();
-    scooterSound.loop = true;
+    playAllSounds();
     pauseLoop = false;
-    currentButton = 'pauseButton';
     pauseStart = true;
     gameLoop();
+    document.getElementById('pause').style.display = 'block';
   }
 
   function pauseGame() {
-    pauseLoop = true; 
+    pauseAllSounds();
+    pauseLoop = true;
+    document.getElementById('pause').style.display = 'none';
+    document.getElementById('resume').style.display = 'block';
+  }
+
+  function resumeGame() {
+    themeSound.play();
+    themeSound.loop = true;
+    pauseLoop = false;
+    gameLoop();
+    document.getElementById('resume').style.display = 'none';
+    document.getElementById('pause').style.display = 'block';
   }
 
   function gameOver() {
@@ -326,4 +350,9 @@ function gameLoop() {
 
     drawPlayAgainButton();
     currentButton = 'playAgain';
+
+    document.getElementById('pause').style.display = 'none';
+    document.getElementById('resume').style.display = 'none';
+
+    maxVelocity = 10; // reset start speed
   }
