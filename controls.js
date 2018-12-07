@@ -1,5 +1,5 @@
 var canvas, ctx, canvasHeight, canvasWidth, controller, joe, pauseLoop, items;
-var maxVelocity = 10; // velocity of background image
+var maxVelocity = 12; // velocity of background image
 var targetFPS = 33;
 var backgroundImageX = 0;
 var bounce = true;
@@ -9,10 +9,11 @@ var currentButton = 'startGame';
 var objects = [];
 var score = 0;
 var lives = 3;
+var v_increase = 0;
 
 // load images
 backgroundImage = new Image();
-backgroundImage.src = 'assets/images/locustwalk.jpg';
+backgroundImage.src = 'assets/images/locust (1).jpg';
 joeImage = new Image();
 joeImage.src = 'assets/images/joe+scooter.png';
 coneImage = new Image();
@@ -23,6 +24,8 @@ newsImage = new Image();
 newsImage.src = 'assets/images/dp-newsstand.png';
 startButton = new Image();
 startButton.src = 'assets/images/start-button.png';
+flyerImage = new Image();
+flyerImage.src = 'assets/images/flyering-dude.png';
 
 // load sounds
 themeSound = document.createElement("audio");
@@ -37,7 +40,7 @@ bounceSound.src = "assets/sounds/bounce.wav";
 // get reference to the canvas and its context
 canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
-ctx.canvas.height = 500;
+ctx.canvas.height = 550;
 ctx.canvas.width = 1400;
 canvasHeight = ctx.canvas.height;
 canvasWidth = ctx.canvas.width;
@@ -91,26 +94,26 @@ items = [
   {
     type: 'cone',
     x:canvasWidth,
-    y:canvasHeight - 180,
-    height:70,
-    width:50,
+    y:canvasHeight - 230,
+    height:80,
+    width:60,
     image: coneImage
   },
   {
     type: 'squirrel',
     x:canvasWidth,
-    y:canvasHeight - 115,
+    y:canvasHeight - 150,
     height:67,
     width:67,
     image: squirrelImage
   },
   {
-    type: 'newsstand',
-    x:canvasWidth,
-    y:canvasHeight - 120,
-    height:80,
-    width:70,
-    image: newsImage
+    type: 'flyer',
+    x: canvasWidth,
+    y: canvasHeight - 230,
+    height: 220,
+    width: 170,
+    image: flyerImage
   }
 ];
 
@@ -132,9 +135,7 @@ function pauseAllSounds() {
 }
 
 function spawnRandomObject() {
-  var item = items[Math.floor(Math.random()*items.length)];
-  // check item probability
-  // if satisfies some condition do rest 
+  var item = items[getRandomInt(items.length)];
   var itemClone = {
     type:item.type,
     x:item.x,
@@ -146,13 +147,25 @@ function spawnRandomObject() {
   objects.push(itemClone);
 }
 
+function spawnDP() {
+  var dp_obj = {
+    type: 'newsstand',
+    x:canvasWidth,
+    y:canvasHeight - 180,
+    height:80,
+    width:70,
+    image: newsImage
+  }
+  objects.push(dp_obj);
+}
+
 function drawBackground() {
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
   // draw twice to cover wrap around
   ctx.drawImage(backgroundImage, backgroundImageX, 0, canvasWidth, canvasHeight);
   ctx.drawImage(backgroundImage, backgroundImageX + canvasWidth, 0, canvasWidth, canvasHeight);
-  ctx.fillStyle = "rgba(255,255,255,0.1)";
+  ctx.fillStyle = "rgba(255,255,255,0)";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
@@ -207,12 +220,16 @@ function runBackground() {
 }
 
 function jump() {
-  joe.y_velocity -= 30;
+  joe.y_velocity -= 35; // higher number = bigger jump
   joe.jumping = true;
   bounce = true;
 }
 
-var v_increase = 0;
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+// main game loop
 function gameLoop() {
   v_increase++;
   if (v_increase > 200 && v_increase % 200 === 0) {
@@ -221,10 +238,14 @@ function gameLoop() {
   if (pauseLoop) {
     return;
   }
-  // randomly spawn objects
-  var randomTime = Math.random()*10;
-  if (randomTime > 9.9) {
+  // control frequency of object spawning
+  var randomTime = getRandomInt(100);
+  if (randomTime === 0) {
     spawnRandomObject();
+  }
+
+  if (getRandomInt(2000) === 99) {
+    spawnDP();
   }
 
   // continually loop background image
@@ -242,9 +263,9 @@ function gameLoop() {
 
   // draw score and lives
   ctx.fillStyle = "white";
-  ctx.font = "bold 30px Arial";
-  ctx.fillText("Score: " + score + "   " + "Lives: " + lives,
-  (canvas.width / 2) - 650, (canvas.height / 2) - 200);
+  ctx.font = "bold 45px Acme";
+  ctx.fillText("Score: " + score + "     " + "Lives: " + lives,
+  (canvas.width / 2) - 650, (canvas.height / 2) - 220);
 
   if (controller.up && joe.jumping === false) {
     jump();
@@ -275,11 +296,11 @@ function gameLoop() {
 
     // check for collisions, set collision radii
     if (object.x - joe.x <= 90 && object.x - joe.x > 0 &&
-      Math.abs(object.y - joe.y) <= 220) {
+      Math.abs(object.y - joe.y) <= 200) {
         if (object.type === 'cone') {
           collectSound.play();
           incrementScore();
-        } else if (object.type === 'squirrel') {
+        } else if (object.type === 'squirrel' || object.type === 'flyer') {
           decrementLives();
         } else if (object.type === 'newsstand') {
           collectSound.play();
@@ -289,7 +310,7 @@ function gameLoop() {
         removeItem(object);
       }
 
-      if (object.x < 0) {
+      if (object.x < -100) {
         removeItem(object);
       }
     }
@@ -344,9 +365,9 @@ function gameLoop() {
     ctx.fill();
 
     ctx.fillStyle = "white";
-    ctx.font = "bold 30px Arial";
+    ctx.font = "bold 35px Acme";
     ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
-    (canvas.width / 2 - 250), (canvas.height / 2));
+    (canvas.width / 2 - 250), (canvas.height / 2 - 100));
 
     drawPlayAgainButton();
     currentButton = 'playAgain';
@@ -354,5 +375,5 @@ function gameLoop() {
     document.getElementById('pause').style.display = 'none';
     document.getElementById('resume').style.display = 'none';
 
-    maxVelocity = 10; // reset start speed
+    maxVelocity = 12; // reset start speed
   }

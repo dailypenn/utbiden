@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Acme|Fredoka+One');
+
 #title {
   color: black;
   font-family: arial;
@@ -55,10 +57,6 @@
   height: auto;
 }
 
-#start-menu {
-
-}
-
 button {
   background-color: grey;
   color: white;
@@ -66,10 +64,16 @@ button {
 
 #pause {
   display: none;
+  width: 75px;
+  height: auto;
+  margin: 0 auto;
 }
 
 #resume {
   display: none;
+  width: 75px;
+  height: auto;
+  margin: 0 auto; 
 }
 
 #game-over-menu {
