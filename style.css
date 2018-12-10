@@ -1,52 +1,44 @@
 @import url('https://fonts.googleapis.com/css?family=Acme|Fredoka+One');
+@import url('https://fonts.googleapis.com/css?family=Lato:300');
 
-#title {
-  color: black;
-  font-family: arial;
-  font-weight: bold;
-  font-size: 30px;
+#canvas {
+  width: 100%;
+  height: auto;
+}
+input:hover {
+  cursor: pointer;
+}
+
+.container {
+
+}
+
+.title {
   text-align: center;
-}
-
-#game {
-  width: 1400px;
-  height: 500px;
-  background-color: blue;
-  margin: 0 auto;
-}
-
-#stats-panel {
-  color: red;
-  font-family: arial;
+  font-family: Acme;
   font-size: 30px;
+  color: #4286f4;
 }
 
-#myButton {
-  position: absolute;
-  margin: 300px 600px 100px 600px;
-  text-align: center;
-  z-index: 2000;
-	background-color:#eb2f2f;
-	-moz-border-radius:28px;
-	-webkit-border-radius:28px;
-	border-radius:28px;
-	border:1px solid #ffffff;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:20px;
-	font-weight:bold;
-	padding:21px 31px;
-	text-decoration:none;
-	text-shadow:0px 0px 0px #808080;
+hr {
+  width: 200px;
+  border-top: 1px solid #4286f4;
 }
-#myButton:hover {
-	background-color:#bd1717;
+
+.icon-img {
+  width: 50px;
+  height: auto;
+  float: right;
 }
-#myButton:active {
-	position:relative;
-	top:1px;
+
+.description {
+  float: left;
+  font-family: Lato;
+}
+
+
+#text-description {
+  margin-top: 50px;
 }
 
 #arrow-keys {
@@ -62,6 +54,13 @@ button {
   color: white;
 }
 
+#start {
+  display: block;
+  width: 200px;
+  height: auto;
+  margin: 0 auto;
+}
+
 #pause {
   display: none;
   width: 75px;
@@ -73,7 +72,7 @@ button {
   display: none;
   width: 75px;
   height: auto;
-  margin: 0 auto; 
+  margin: 0 auto;
 }
 
 #game-over-menu {

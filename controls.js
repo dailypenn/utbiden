@@ -1,4 +1,4 @@
-var canvas, ctx, canvasHeight, canvasWidth, controller, joe, pauseLoop, items;
+var canvas, ctx, canvasHeight, canvasWidth, controller, joe, pauseLoop, badItems;
 var maxVelocity = 12; // velocity of background image
 var targetFPS = 33;
 var backgroundImageX = 0;
@@ -27,15 +27,27 @@ startButton.src = 'assets/images/start-button.png';
 flyerImage = new Image();
 flyerImage.src = 'assets/images/flyering-dude.png';
 
-// load sounds
+// load sounds and adjust speed/volume
 themeSound = document.createElement("audio");
 themeSound.src = "assets/sounds/themesong.wav";
 scooterSound = document.createElement("audio");
-scooterSound.src = "assets/sounds/scooter.wav";
-collectSound = document.createElement("audio");
-collectSound.src = "assets/sounds/collect.wav";
+scooterSound.src = "assets/sounds/scooter_roll.mp3";
+scooterSound.volume = 0.2;
+iceCreamSound = document.createElement("audio");
+iceCreamSound.src = "assets/sounds/ice_cream_slurp.mp3";
+iceCreamSound.playbackRate = 2.0;
 bounceSound = document.createElement("audio");
-bounceSound.src = "assets/sounds/bounce.wav";
+bounceSound.src = "assets/sounds/scooter_land.mp3";
+bounceSound.playbackRate = 2.0;
+dpSound = document.createElement("audio");
+dpSound.src = "assets/sounds/collectdp.wav";
+dpSound.volume = 0.5;
+squirrelSound = document.createElement("audio");
+squirrelSound.src = "assets/sounds/Squirrel_Yelp.mp3";
+squirrelSound.playbackRate = 2.0;
+flyerSound = document.createElement("audio");
+flyerSound.src = "assets/sounds/flyer_man.mp3";
+flyerSound.playbackRate = 2.0;
 
 // get reference to the canvas and its context
 canvas = document.getElementById("canvas");
@@ -44,25 +56,6 @@ ctx.canvas.height = 550;
 ctx.canvas.width = 1400;
 canvasHeight = ctx.canvas.height;
 canvasWidth = ctx.canvas.width;
-
-// on canvas buttons
-canvas.addEventListener('click', function(event) {
-  if (
-    event.x > buttonX &&
-    event.x < buttonX + buttonW &&
-    event.y > buttonY &&
-    event.y < buttonY + buttonH
-  ) {
-    if (currentButton === 'startGame') {
-      startGame();
-    } else if (currentButton === 'playAgain') {
-      // reset lives and score variables
-      lives = 3;
-      score = 0;
-      startGame();
-    }
-  }
-});
 
 if (!pauseStart) {
   runBackground();
@@ -82,6 +75,7 @@ joe = {
 controller = {
   up:false,
   keyListener:function (e) {
+    e.preventDefault();
     var key_state = (e.type == "keydown") ? true : false;
     var start = 0;
     if (e.keyCode === 38) {
@@ -90,15 +84,7 @@ controller = {
   }
 };
 
-items = [
-  {
-    type: 'cone',
-    x:canvasWidth,
-    y:canvasHeight - 230,
-    height:80,
-    width:60,
-    image: coneImage
-  },
+badItems = [
   {
     type: 'squirrel',
     x:canvasWidth,
@@ -117,6 +103,7 @@ items = [
   }
 ];
 
+
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
 
@@ -130,12 +117,12 @@ function playAllSounds() {
 function pauseAllSounds() {
   themeSound.pause();
   scooterSound.pause();
-  collectSound.pause();
+  iceCreamSound.pause();
   bounceSound.pause();
 }
 
-function spawnRandomObject() {
-  var item = items[getRandomInt(items.length)];
+function spawnBadItem() {
+  var item = badItems[getRandomInt(badItems.length)];
   var itemClone = {
     type:item.type,
     x:item.x,
@@ -159,6 +146,18 @@ function spawnDP() {
   objects.push(dp_obj);
 }
 
+function spawnCone() {
+  var cone_obj = {
+      type: 'cone',
+      x:canvasWidth,
+      y:canvasHeight - 230,
+      height:80,
+      width:60,
+      image: coneImage
+  }
+  objects.push(cone_obj);
+}
+
 function drawBackground() {
   ctx.globalAlpha = 1;
   ctx.globalCompositeOperation = 'source-over';
@@ -173,26 +172,7 @@ function drawJoeBiden() {
   ctx.drawImage(joe.image, joe.x, joe.y, joe.width, joe.height);
 }
 
-function drawStartButton() {
-  // button size
-  buttonX = 550;
-  buttonY = 200;
-  buttonW = 250;
-  buttonH = 115;
-
-  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
-}
-
-function drawPlayAgainButton() {
-  // button size
-  buttonX = 550;
-  buttonY = 200;
-  buttonW = 250;
-  buttonH = 115;
-
-  ctx.drawImage(startButton, buttonX, buttonY, 250, 115);
-}
-
+// removes object from items array
 function removeItem(item) {
   for (var i = 0; i < objects.length; i++) {
     var object = objects[i];
@@ -216,7 +196,7 @@ function runBackground() {
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
-  drawStartButton();
+  document.getElementById('start').style.display = "block";
 }
 
 function jump() {
@@ -239,13 +219,17 @@ function gameLoop() {
     return;
   }
   // control frequency of object spawning
-  var randomTime = getRandomInt(100);
-  if (randomTime === 0) {
-    spawnRandomObject();
+  var randomTime = getRandomInt(250);
+  if (getRandomInt(200) === 0) {
+    spawnBadItem();
   }
 
   if (getRandomInt(2000) === 99) {
     spawnDP();
+  }
+
+  if (getRandomInt(100) === 0) {
+    spawnCone();
   }
 
   // continually loop background image
@@ -298,12 +282,16 @@ function gameLoop() {
     if (object.x - joe.x <= 90 && object.x - joe.x > 0 &&
       Math.abs(object.y - joe.y) <= 200) {
         if (object.type === 'cone') {
-          collectSound.play();
+          iceCreamSound.play();
           incrementScore();
-        } else if (object.type === 'squirrel' || object.type === 'flyer') {
+        } else if (object.type === 'squirrel') {
+          squirrelSound.play();
+          decrementLives();
+        } else if (object.type === 'flyer') {
+          flyerSound.play();
           decrementLives();
         } else if (object.type === 'newsstand') {
-          collectSound.play();
+          dpSound.play();
           incrementLives();
         }
         object.image = ''; // clear image after colliding
@@ -337,6 +325,7 @@ function gameLoop() {
     pauseLoop = false;
     pauseStart = true;
     gameLoop();
+    document.getElementById('start').style.display = 'none';
     document.getElementById('pause').style.display = 'block';
   }
 
@@ -367,13 +356,15 @@ function gameLoop() {
     ctx.fillStyle = "white";
     ctx.font = "bold 35px Acme";
     ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
-    (canvas.width / 2 - 250), (canvas.height / 2 - 100));
+    (canvas.width / 2 - 250), (canvas.height / 2 - 30));
 
-    drawPlayAgainButton();
-    currentButton = 'playAgain';
 
+    document.getElementById('start').style.display = 'block';
+    lives = 0;
+    score = 0;
     document.getElementById('pause').style.display = 'none';
     document.getElementById('resume').style.display = 'none';
 
     maxVelocity = 12; // reset start speed
+    objects = []; // clear all objects
   }
