@@ -13,9 +13,9 @@ var v_increase = 0;
 
 // load images
 backgroundImage = new Image();
-backgroundImage.src = 'assets/images/locust (1).jpg';
+backgroundImage.src = 'assets/images/locust.jpg';
 joeImage = new Image();
-joeImage.src = 'assets/images/joe+scooter.png';
+joeImage.src = 'assets/images/joe-scooter.png';
 coneImage = new Image();
 coneImage.src = 'assets/images/ice-cream-cone.png';
 squirrelImage = new Image();

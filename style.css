@@ -1,44 +1,65 @@
-@import url('https://fonts.googleapis.com/css?family=Acme|Fredoka+One');
-@import url('https://fonts.googleapis.com/css?family=Lato:300');
+@import url('https://fonts.googleapis.com/css?family=Lato|Quattrocento+Sans:400,700');
 
-#canvas {
-  width: 100%;
-  height: auto;
+body {
+  font-family: 'Lato', sans-serif;
 }
+
+h1, h2 {
+  margin-top: 50px;
+  font-family: 'Quattrocento Sans', sans-serif;
+  text-align: center;
+  color: #446CB3;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+hr {
+  border-top: 1px solid #446CB3;
+}
+
+hr.section {
+  width: 50%;
+}
+
+button {
+  background-color: #777;
+  color: #FFF;
+}
+
 input:hover {
   cursor: pointer;
 }
 
-.container {
-
-}
-
-.title {
+nav {
+  height: 40px;
+  padding-top: 10px;
+  background-color: #222;
+  font-size: 28px;
   text-align: center;
-  font-family: Acme;
-  font-size: 30px;
-  color: #4286f4;
+  color: #FFF;
+  font-family: 'Quattrocento Sans', sans-serif;
 }
 
-hr {
-  width: 200px;
-  border-top: 1px solid #4286f4;
+a, a:hover {
+  text-decoration: none;
 }
 
-.icon-img {
-  width: 50px;
+a.home-link {
+  color: #FFF;
+}
+
+span.button {
+  font-weight: 700;
+  color: #446CB3;
+}
+
+#canvas {
+  width: 100%;
   height: auto;
-  float: right;
-}
-
-.description {
-  float: left;
-  font-family: Lato;
-}
-
-
-#text-description {
-  margin-top: 50px;
 }
 
 #arrow-keys {
@@ -47,11 +68,6 @@ hr {
   margin: 80px 500px 100px 500px;
   width: 400px;
   height: auto;
-}
-
-button {
-  background-color: grey;
-  color: white;
 }
 
 #start {
@@ -80,6 +96,18 @@ button {
   position: absolute;
   width: 100px;
   height: 400px;
-  background-color: blue;
+  background-color: #446CB3;
   color: white;
+}
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  height: 50px;
+}
+
+.icon-img {
+  width: 50px;
+  height: auto;
+  float: right;
 }

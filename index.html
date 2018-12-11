@@ -2,44 +2,76 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Joe Biden Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>UTBiden | Under the Button</title>
+
+  <meta property="og:title" content="UTBiden">
+  <meta property="og:image" content="https://snworksceo.imgix.net/dpn-utb/d291c5ca-bc39-47c5-9b44-30b305079dff.sized-1000x1000.png">
+  <meta property="og:description" content="[description]">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://dailypenn.github.io/utbiden/">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="UTBiden">
+  <meta name="twitter:image" content="https://snworksceo.imgix.net/dpn-utb/d291c5ca-bc39-47c5-9b44-30b305079dff.sized-1000x1000.png">
+  <meta name="twitter:description" content="[description, less than 200 characters]">
+  <meta name="twitter:url" content="https://dailypenn.github.io/utbiden/">
+  <meta name="twitter:site" content="@underthebutton">
+
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-631054-4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-631054-4');
+  </script>
+
+  <nav class="navbar">
+    <a href="http://underthebutton.com" class="home-link">under the <span class="button">button</span></a>
+  </nav>
+
   <div class="container">
-    <div id="text-description">
-      <div class="title">Introduction: UTBiden</div>
-      <hr>
-      <br><br>
-      <input type="image" src="assets/images/start-button.png" onclick="startGame()" id="start">
-      <canvas id="canvas"></canvas>
-      <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
-      <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume">
-      <div class="title">How To Play</div>
-      <hr>
-      <div class="row">
-        <div class="col-6"><img class="icon-img" src="assets/images/ice-cream-cone.png"></div>
-        <div class="description col-6">Gain 1 point.</div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-6">
-          <img class="icon-img" src="assets/images/flyering-dude.png">
-          <img class="icon-img" src="assets/images/squirrel.png">
-        </div>
-        <div class="description col-6">Lose a life.</div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-6">
-          <img class="icon-img" src="assets/images/dp-newsstand.png">
-        </div>
-        <div class="description col-6">Gain a life.</div>
-      </div>
-      <br>
+    <h1>UTBiden</h1>
+    <hr class="section">
+    <input type="image" src="assets/images/start-button.png" onclick="startGame()" id="start">
+    <canvas id="canvas"></canvas>
+    <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
+    <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume">
+
+    <h2>How To Play</h2>
+    <hr class="section">
+    <div class="row">
+      <div class="col-6"><img class="icon-img" src="assets/images/ice-cream-cone.png"></div>
+      <div class="description col-6">Gain 1 point.</div>
     </div>
+
+    <div class="row">
+      <div class="col-6">
+        <img class="icon-img" src="assets/images/flyering-dude.png">
+        <img class="icon-img" src="assets/images/squirrel.png">
+      </div>
+      <div class="description col-6">Lose a life.</div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <img class="icon-img" src="assets/images/dp-newsstand.png">
+      </div>
+      <div class="description col-6">Gain a life.</div>
+    </div>
+
+    <footer>
+      <hr>
+      Made with 🍦 by The Daily Pennsylvanian, © 2018. All rights reversed.
+    </footer>
   </div>
+
   <script type="text/javascript" src="controls.js"></script>
 </body>
 </html>
