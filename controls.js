@@ -339,8 +339,7 @@ function gameLoop() {
   }
 
   function resumeGame() {
-    themeSound.play();
-    themeSound.loop = true;
+    playAllSounds();
     pauseLoop = false;
     gameLoop();
     document.getElementById('resume').style.display = 'none';
@@ -362,7 +361,7 @@ function gameLoop() {
 
 
     document.getElementById('start').style.display = 'block';
-    lives = 0;
+    lives = 3;
     score = 0;
     document.getElementById('pause').style.display = 'none';
     document.getElementById('resume').style.display = 'none';
