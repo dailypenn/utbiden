@@ -249,7 +249,7 @@ function gameLoop() {
 
   // draw score and lives
   ctx.fillStyle = "white";
-  ctx.font = "bold 45px Acme";
+  ctx.font = "bold 45px Lato";
   ctx.fillText("Score: " + score + "     " + "Lives: " + lives,
   (canvas.width / 2) - 650, (canvas.height / 2) - 220);
 
@@ -356,7 +356,7 @@ function gameLoop() {
     ctx.fill();
 
     ctx.fillStyle = "white";
-    ctx.font = "bold 35px Acme";
+    ctx.font = "bold 35px Lato";
     ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
     (canvas.width / 2 - 250), (canvas.height / 2 - 30));
 
