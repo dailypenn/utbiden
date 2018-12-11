@@ -116,9 +116,11 @@ function playAllSounds() {
 
 function pauseAllSounds() {
   themeSound.pause();
+  themeSound.loop = false;
   scooterSound.pause();
-  iceCreamSound.pause();
-  bounceSound.pause();
+  scooterSound.loop = false;
+  // iceCreamSound.pause();
+  // bounceSound.pause();
 }
 
 function spawnBadItem() {

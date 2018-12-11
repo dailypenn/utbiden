@@ -107,7 +107,16 @@ span.button {
 }
 
 .icon-img {
-  width: 50px;
+  width: 60px;
   height: auto;
-  float: right;
+  float: left;
+}
+
+.text-center {
+  font-size: 20px;
+  color: #446CB3;
+}
+
+#icons {
+  margin-top: 50px; 
 }
