@@ -11,6 +11,16 @@ h1, h2 {
   color: #446CB3;
 }
 
+p {
+  text-align: center;
+}
+
+p.intro {
+  width: 50%;
+  margin: auto;
+  margin-bottom: 50px;
+}
+
 footer {
   text-align: center;
   margin-top: 40px;
@@ -50,6 +60,16 @@ a, a:hover {
 
 a.home-link {
   color: #FFF;
+}
+
+.articles a {
+  display: block;
+  margin-top: 20px;
+  color: inherit;
+}
+
+.articles a:hover {
+  color: #446CB3;
 }
 
 span.button {
@@ -117,6 +137,29 @@ span.button {
   color: #446CB3;
 }
 
-#icons {
-  margin-top: 50px; 
+.icons, .ad-container {
+  margin-top: 50px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gain-lose {
+  margin-left: 15px;
+}
+
+.ad {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 0;
+}
+
+@media screen and (max-width: 768px) {
+  p.intro {
+    width: 100%;
+  }
 }

@@ -4,18 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>UTBiden | Under the Button</title>
+  <title>UTBiden: The Video Game | Under the Button</title>
 
-  <meta property="og:title" content="UTBiden">
+  <meta property="og:title" content="UTBiden: The Video Game">
   <meta property="og:image" content="https://snworksceo.imgix.net/dpn-utb/d291c5ca-bc39-47c5-9b44-30b305079dff.sized-1000x1000.png">
-  <meta property="og:description" content="[description]">
+  <meta property="og:description" content="Have you ever wondered what it's like to be the 47th Vice President of the United States and Presidential Professor of Practice, Joseph Robinette Biden Jr? Now's your chance!">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://projects.underthebutton.com/utbiden/">
 
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="UTBiden">
+  <meta name="twitter:title" content="UTBiden: The Video Game">
   <meta name="twitter:image" content="https://snworksceo.imgix.net/dpn-utb/d291c5ca-bc39-47c5-9b44-30b305079dff.sized-1000x1000.png">
-  <meta name="twitter:description" content="[description, less than 200 characters]">
+  <meta name="twitter:description" content="Have you ever wondered what it's like to be the 47th Vice President of the United States and Presidential Professor of Practice, Joseph Robinette Biden Jr? Now's your chance!">
   <meta name="twitter:url" content="https://projects.underthebutton.com/utbiden/">
   <meta name="twitter:site" content="@underthebutton">
 
@@ -32,13 +32,30 @@
     gtag('config', 'UA-631054-4');
   </script>
 
+  <!-- DFP Ads -->
+  <script async="async" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+  <script>
+    var googletag = googletag || {};
+    googletag.cmd = googletag.cmd || [];
+  </script>
+  <script>
+    googletag.cmd.push(function() {
+      googletag.defineSlot('/12234093/DP.com-mobile-leaderboard', [320, 50], 'div-gpt-ad-1485118541142-0').addService(googletag.pubads());
+      googletag.defineSlot('/12234093/DP.com-Leaderboard', [728, 90], 'div-gpt-ad-1485118541142-1').addService(googletag.pubads());
+      googletag.pubads().enableSingleRequest();
+      googletag.enableServices();
+    });
+  </script>
+
   <nav class="navbar">
     <a href="http://underthebutton.com" class="home-link">under the <span class="button">button</span></a>
   </nav>
 
   <div class="container">
-    <h1>UTBiden</h1>
+    <h1>UTBiden: The Video Game</h1>
     <hr class="section">
+    <p class="intro">Have you ever wondered what it's like to be the 47th Vice President of the United States and Presidential Professor of Practice, Joseph Robinette Biden Jr? Now's your chance!</p>
+
     <input type="image" src="assets/images/start-button.png" onclick="startGame()" id="start">
     <canvas id="canvas"></canvas>
     <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
@@ -46,20 +63,59 @@
 
     <h2>How To Play</h2>
     <hr class="section">
+    <p>Use the up arrow key to jump!</p>
 
-    <div  id="icons" class="row">
-      <div class="offset-md-1 col-md-3">
+    <div class="row icons">
+      <div class="offset-md-1 col-md-3 icon">
         <img class="icon-img" src="assets/images/ice-cream-cone.png">
-        <div class="text-center">Gain a point</div>
+        <div class="text-center gain-lose">Gain a point</div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 icon">
         <img class="icon-img" src="assets/images/flyering-dude.png">
         <img class="icon-img" src="assets/images/squirrel.png">
-        <div class="text-center">Lose a life</div>
+        <div class="text-center gain-lose">Lose a life</div>
       </div>
-      <div class="col-md-3 offset-md-1">
+      <div class="col-md-3 offset-md-1 icon">
         <img class="icon-img" src="assets/images/dp-newsstand.png">
-        <div class="text-center">Gain a life</div>
+        <div class="text-center gain-lose">Gain a life</div>
+      </div>
+    </div>
+
+    <div class="ad-container">
+      <hr>
+      <div class="ad">
+        <div class="d-none d-md-block">
+          <!-- /12234093/DP.com-Leaderboard -->
+          <div id='div-gpt-ad-1485118541142-1' style='height:90px; width:728px;'>
+            <script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1485118541142-1'); });
+            </script>
+          </div>
+        </div>
+        <div class="d-md-none">
+          <!-- /12234093/DP.com-mobile-leaderboard -->
+          <div id='div-gpt-ad-1485118541142-0' style='height:50px; width:320px;'>
+            <script>
+            googletag.cmd.push(function() { googletag.display('div-gpt-ad-1485118541142-0'); });
+            </script>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <h2>The Latest on Joe</h2>
+    <div class="row articles">
+      <div class="col-md-5 offset-md-1">
+        <a href="https://www.underthebutton.com/article/2017/10/sophomore-doesnt-wave-at-biden" target="_blank">Jaded Sophomore Doesn’t Even Wave Back at Joe Biden</a>
+        <a href="https://www.underthebutton.com/article/2018/09/jeb-walk-locust-notice-biden" target="_blank">BREAKING: Jeb Bush Walks Down Locust, Literally No One Cares</a>
+        <a href="https://www.underthebutton.com/article/2018/09/biden-at-noto" target="_blank">Perry World House Presents: BIDEN @ NOTO</a>
+        <a href="https://www.underthebutton.com/article/2018/04/biden-made-a-low-profile-visit-to-campus-yesterday-not-that-youre-ever-going-to-meet-him-anyway" target="_blank">Biden Made a Low-Profile Visit to Campus Yesterday, Not That You’re Ever Going to Meet Him Anyway</a>
+      </div>
+      <div class="col-md-5">
+        <a href="https://www.underthebutton.com/article/2017/10/letter-from-joe-biden" target="_blank">OP-ED by Joe Biden: Thanks for the Building, Nerds, But I Don't Care About Any of You</a>
+        <a href="https://www.underthebutton.com/article/2017/02/biden-makes-pennkey" target="_blank">Joe Biden Attempts to Make PennKey, Finds "biden" Already Taken</a>
+        <a href="https://www.underthebutton.com/article/2018/03/joe-biden-to-teach-introductory-polical-science-course" target="_blank">Joe Biden to teach an introductory political science course at Penn. Here's how students reacted.</a>
       </div>
     </div>
 
