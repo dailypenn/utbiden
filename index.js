@@ -12,9 +12,7 @@ var lives = 3;
 var v_increase = 0;
 
 // add jump button for mobile users
-const SUPPORTS_POINTER = 'PointerEvent' in window;
-const SUPPORTS_TOUCH = 'ontouchstart' in window;
-if (SUPPORTS_POINTER || SUPPORTS_TOUCH) {
+if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
   document.getElementById('jump').style.display = 'block';
 }
 
@@ -36,7 +34,7 @@ flyerImage.src = 'assets/images/flyering-dude.png';
 
 // load sounds and adjust speed/volume
 themeSound = document.createElement('audio');
-themeSound.src = 'assets/sounds/themesong.wav';
+themeSound.src = 'assets/sounds/themesong.mp3';
 scooterSound = document.createElement('audio');
 scooterSound.src = 'assets/sounds/scooter_roll.mp3';
 scooterSound.volume = 0.2;
@@ -47,7 +45,7 @@ bounceSound = document.createElement('audio');
 bounceSound.src = 'assets/sounds/scooter_land.mp3';
 bounceSound.playbackRate = 2.0;
 dpSound = document.createElement('audio');
-dpSound.src = 'assets/sounds/collectdp.wav';
+dpSound.src = 'assets/sounds/collectdp.mp3';
 dpSound.volume = 0.5;
 squirrelSound = document.createElement('audio');
 squirrelSound.src = 'assets/sounds/squirrel_yelp.mp3';
@@ -69,23 +67,25 @@ if (!pauseStart) {
 }
 
 joe = {
-  width:150,
-  height:200,
-  x:100,
-  y:0,
-  x_velocity:0,
-  y_velocity:0,
-  jumping:true,
-  image:joeImage
+  width: 150,
+  height: 200,
+  x: 100,
+  y: 0,
+  x_velocity: 0,
+  y_velocity: 0,
+  jumping: true,
+  image: joeImage
 };
 
 controller = {
-  up:false,
+  up: false,
   keyListener: (e) => {
-    e.preventDefault();
     var key_state = e.type == 'keydown' ? true : false;
     var start = 0;
-    if (e.keyCode === 38) controller.up = key_state;
+    if (e.keyCode === 38) {
+      e.preventDefault();
+      controller.up = key_state;
+    }
   }
 };
 
