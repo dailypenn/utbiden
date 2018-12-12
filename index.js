@@ -53,6 +53,7 @@ squirrelSound.playbackRate = 2.0;
 flyerSound = document.createElement('audio');
 flyerSound.src = 'assets/sounds/flyer_man.mp3';
 flyerSound.playbackRate = 2.0;
+sounds = [themeSound, scooterSound, iceCreamSound, bounceSound, dpSound, squirrelSound, flyerSound];
 
 // get reference to the canvas and its context
 canvas = document.getElementById('canvas');
@@ -112,6 +113,7 @@ window.addEventListener('keydown', controller.keyListener);
 window.addEventListener('keyup', controller.keyListener);
 
 function playAllSounds() {
+  if (themeSound.classList.contains('muted')) return;
   themeSound.play();
   themeSound.loop = true;
   scooterSound.play();
@@ -123,6 +125,20 @@ function pauseAllSounds() {
   themeSound.loop = false;
   scooterSound.pause();
   scooterSound.loop = false;
+}
+
+function mute() {
+  document.getElementById('mute').style.display = 'none';
+  document.getElementById('unmute').style.display = 'block';
+  pauseAllSounds();
+  sounds.forEach(sound => sound.classList.add('muted'));
+}
+
+function unmute() {
+  document.getElementById('unmute').style.display = 'none';
+  document.getElementById('mute').style.display = 'block';
+  sounds.forEach(sound => sound.classList.remove('muted'));
+  playAllSounds();
 }
 
 function spawnBadItem() {
@@ -241,9 +257,9 @@ function gameLoop() {
 
   if (controller.up && joe.jumping === false) jump();
 
-  joe.y_velocity += 1.5;// gravity
+  joe.y_velocity += 1.5; // gravity
   joe.y += joe.y_velocity;
-  joe.y_velocity *= 0.98;// friction
+  joe.y_velocity *= 0.98; // friction
 
   // detect collision between joe and ground
   if (joe.y > 250) {
@@ -254,7 +270,7 @@ function gameLoop() {
       joe.y_velocity -= 5; // bounce intensity
       joe.jumping = true;
       bounce = false;
-      bounceSound.play();
+      if (!bounceSound.classList.contains('muted')) bounceSound.play();
     }
   }
 
@@ -267,16 +283,16 @@ function gameLoop() {
     // check for collisions, set collision radii
     if (object.x - joe.x <= 90 && object.x - joe.x > 0 && Math.abs(object.y - joe.y) <= 200) {
       if (object.type === 'cone') {
-        iceCreamSound.play();
+        if (!iceCreamSound.classList.contains('muted')) iceCreamSound.play();
         incrementScore();
       } else if (object.type === 'squirrel') {
-        squirrelSound.play();
+        if (!squirrelSound.classList.contains('muted')) squirrelSound.play();
         decrementLives();
       } else if (object.type === 'flyer') {
-        flyerSound.play();
+        if (!flyerSound.classList.contains('muted')) flyerSound.play();
         decrementLives();
       } else if (object.type === 'newsstand') {
-        dpSound.play();
+        if (!dpSound.classList.contains('muted')) dpSound.play();
         incrementLives();
       }
       object.image = ''; // clear image after colliding
@@ -310,6 +326,11 @@ function startGame() {
   gameLoop();
   document.getElementById('start').style.display = 'none';
   document.getElementById('pause').style.display = 'block';
+  if (themeSound.classList.contains('muted')) {
+    document.getElementById('unmute').style.display = 'block';
+  } else {
+    document.getElementById('mute').style.display = 'block';
+  }
 }
 
 function pauseGame() {
@@ -344,6 +365,8 @@ function gameOver() {
   score = 0;
   document.getElementById('pause').style.display = 'none';
   document.getElementById('resume').style.display = 'none';
+  document.getElementById('mute').style.display = 'none';
+  document.getElementById('unmute').style.display = 'none';
 
   maxVelocity = 12; // reset start speed
   objects = []; // clear all objects

@@ -62,8 +62,16 @@
     </div>
     <div class="inputs">
       <input type="image" src="assets/images/jump-button.png" onclick="jump()" id="jump">
-      <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
-      <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume">
+      <div class="row">
+        <div class="col-1 offset-5">
+          <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause" class="options">
+          <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume" class="options">
+        </div>
+        <div class="col-1 volume-buttons">
+          <input type="image" src="assets/images/mute.png" onclick="mute()" id="mute" class="options">
+          <input type="image" src="assets/images/volume.png" onclick="unmute()" id="unmute" class="options">
+        </div>
+      </div>
     </div>
 
     <h2>How To Play</h2>
