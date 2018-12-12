@@ -103,7 +103,6 @@ badItems = [
   }
 ];
 
-
 window.addEventListener("keydown", controller.keyListener);
 window.addEventListener("keyup", controller.keyListener);
 
@@ -358,7 +357,6 @@ function gameLoop() {
     ctx.font = "bold 35px Lato";
     ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
     (canvas.width / 2 - 250), (canvas.height / 2 - 30));
-
 
     document.getElementById('start').style.display = 'block';
     lives = 3;
