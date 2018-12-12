@@ -218,6 +218,7 @@ function runBackground() {
 }
 
 function jump() {
+  if (joe.jumping) return;
   joe.y_velocity -= 35; // higher number = bigger jump
   joe.jumping = true;
   bounce = true;
@@ -255,7 +256,7 @@ function gameLoop() {
   ctx.font = 'bold 45px Lato';
   ctx.fillText(`Score: ${score}     Lives: ${lives}`, 20, 55);
 
-  if (controller.up && joe.jumping === false) jump();
+  if (controller.up) jump();
 
   joe.y_velocity += 1.5; // gravity
   joe.y += joe.y_velocity;
