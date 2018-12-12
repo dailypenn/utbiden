@@ -11,6 +11,13 @@ var score = 0;
 var lives = 3;
 var v_increase = 0;
 
+// add jump button for mobile users
+const SUPPORTS_POINTER = 'PointerEvent' in window;
+const SUPPORTS_TOUCH = 'ontouchstart' in window;
+if (SUPPORTS_POINTER || SUPPORTS_TOUCH) {
+  document.getElementById('jump').style.display = 'block';
+}
+
 // load images
 backgroundImage = new Image();
 backgroundImage.src = 'assets/images/locust.jpg';
@@ -28,30 +35,30 @@ flyerImage = new Image();
 flyerImage.src = 'assets/images/flyering-dude.png';
 
 // load sounds and adjust speed/volume
-themeSound = document.createElement("audio");
-themeSound.src = "assets/sounds/themesong.wav";
-scooterSound = document.createElement("audio");
-scooterSound.src = "assets/sounds/scooter_roll.mp3";
+themeSound = document.createElement('audio');
+themeSound.src = 'assets/sounds/themesong.wav';
+scooterSound = document.createElement('audio');
+scooterSound.src = 'assets/sounds/scooter_roll.mp3';
 scooterSound.volume = 0.2;
-iceCreamSound = document.createElement("audio");
-iceCreamSound.src = "assets/sounds/ice_cream_slurp.mp3";
+iceCreamSound = document.createElement('audio');
+iceCreamSound.src = 'assets/sounds/ice_cream_slurp.mp3';
 iceCreamSound.playbackRate = 2.0;
-bounceSound = document.createElement("audio");
-bounceSound.src = "assets/sounds/scooter_land.mp3";
+bounceSound = document.createElement('audio');
+bounceSound.src = 'assets/sounds/scooter_land.mp3';
 bounceSound.playbackRate = 2.0;
-dpSound = document.createElement("audio");
-dpSound.src = "assets/sounds/collectdp.wav";
+dpSound = document.createElement('audio');
+dpSound.src = 'assets/sounds/collectdp.wav';
 dpSound.volume = 0.5;
-squirrelSound = document.createElement("audio");
-squirrelSound.src = "assets/sounds/Squirrel_Yelp.mp3";
+squirrelSound = document.createElement('audio');
+squirrelSound.src = 'assets/sounds/squirrel_yelp.mp3';
 squirrelSound.playbackRate = 2.0;
-flyerSound = document.createElement("audio");
-flyerSound.src = "assets/sounds/flyer_man.mp3";
+flyerSound = document.createElement('audio');
+flyerSound.src = 'assets/sounds/flyer_man.mp3';
 flyerSound.playbackRate = 2.0;
 
 // get reference to the canvas and its context
-canvas = document.getElementById("canvas");
-ctx = canvas.getContext("2d");
+canvas = document.getElementById('canvas');
+ctx = canvas.getContext('2d');
 ctx.canvas.height = 550;
 ctx.canvas.width = 1400;
 canvasHeight = ctx.canvas.height;
@@ -74,13 +81,11 @@ joe = {
 
 controller = {
   up:false,
-  keyListener:function (e) {
+  keyListener: (e) => {
     e.preventDefault();
-    var key_state = (e.type == "keydown") ? true : false;
+    var key_state = e.type == 'keydown' ? true : false;
     var start = 0;
-    if (e.keyCode === 38) {
-      controller.up = key_state;
-    }
+    if (e.keyCode === 38) controller.up = key_state;
   }
 };
 
@@ -103,8 +108,8 @@ badItems = [
   }
 ];
 
-window.addEventListener("keydown", controller.keyListener);
-window.addEventListener("keyup", controller.keyListener);
+window.addEventListener('keydown', controller.keyListener);
+window.addEventListener('keyup', controller.keyListener);
 
 function playAllSounds() {
   themeSound.play();
@@ -118,19 +123,17 @@ function pauseAllSounds() {
   themeSound.loop = false;
   scooterSound.pause();
   scooterSound.loop = false;
-  // iceCreamSound.pause();
-  // bounceSound.pause();
 }
 
 function spawnBadItem() {
   var item = badItems[getRandomInt(badItems.length)];
   var itemClone = {
-    type:item.type,
-    x:item.x,
-    y:item.y,
-    height:item.height,
-    width:item.width,
-    image:item.image
+    type: item.type,
+    x: item.x,
+    y: item.y,
+    height: item.height,
+    width: item.width,
+    image: item.image
   }
   objects.push(itemClone);
 }
@@ -190,14 +193,12 @@ function runBackground() {
   }
   // continually loop background image
   backgroundImageX -= maxVelocity; // speed of moving background
-  if (backgroundImageX < -canvasWidth) {
-    backgroundImageX += canvasWidth;
-  }
+  if (backgroundImageX < -canvasWidth) backgroundImageX += canvasWidth;
   requestAnimationFrame(runBackground);
 
   ctx.clearRect(0,0,canvas.width,canvas.height);
   drawBackground();
-  document.getElementById('start').style.display = "block";
+  document.getElementById('start').style.display = 'block';
 }
 
 function jump() {
@@ -213,31 +214,18 @@ function getRandomInt(max) {
 // main game loop
 function gameLoop() {
   v_increase++;
-  if (v_increase > 200 && v_increase % 200 === 0) {
-    maxVelocity += 0.3;
-  }
-  if (pauseLoop) {
-    return;
-  }
+  if (v_increase > 200 && v_increase % 200 === 0) maxVelocity += 0.3;
+  if (pauseLoop) return;
+
   // control frequency of object spawning
   var randomTime = getRandomInt(250);
-  if (getRandomInt(200) === 0) {
-    spawnBadItem();
-  }
-
-  if (getRandomInt(2000) === 99) {
-    spawnDP();
-  }
-
-  if (getRandomInt(100) === 0) {
-    spawnCone();
-  }
+  if (getRandomInt(200) === 0) spawnBadItem();
+  if (getRandomInt(2000) === 99) spawnDP();
+  if (getRandomInt(100) === 0) spawnCone();
 
   // continually loop background image
   backgroundImageX -= maxVelocity; // speed of moving background
-  if (backgroundImageX < -canvasWidth) {
-    backgroundImageX += canvasWidth;
-  }
+  if (backgroundImageX < -canvasWidth) backgroundImageX += canvasWidth;
 
   // request another animation frame
   requestAnimationFrame(gameLoop);
@@ -247,14 +235,11 @@ function gameLoop() {
   drawJoeBiden();
 
   // draw score and lives
-  ctx.fillStyle = "white";
-  ctx.font = "bold 45px Lato";
-  ctx.fillText("Score: " + score + "     " + "Lives: " + lives,
-  (canvas.width / 2) - 650, (canvas.height / 2) - 220);
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 45px Lato';
+  ctx.fillText(`Score: ${score}     Lives: ${lives}`, 20, 55);
 
-  if (controller.up && joe.jumping === false) {
-    jump();
-  }
+  if (controller.up && joe.jumping === false) jump();
 
   joe.y_velocity += 1.5;// gravity
   joe.y += joe.y_velocity;
@@ -280,90 +265,86 @@ function gameLoop() {
     ctx.drawImage(object.image, object.x, object.y, object.width, object.height);
 
     // check for collisions, set collision radii
-    if (object.x - joe.x <= 90 && object.x - joe.x > 0 &&
-      Math.abs(object.y - joe.y) <= 200) {
-        if (object.type === 'cone') {
-          iceCreamSound.play();
-          incrementScore();
-        } else if (object.type === 'squirrel') {
-          squirrelSound.play();
-          decrementLives();
-        } else if (object.type === 'flyer') {
-          flyerSound.play();
-          decrementLives();
-        } else if (object.type === 'newsstand') {
-          dpSound.play();
-          incrementLives();
-        }
-        object.image = ''; // clear image after colliding
-        removeItem(object);
+    if (object.x - joe.x <= 90 && object.x - joe.x > 0 && Math.abs(object.y - joe.y) <= 200) {
+      if (object.type === 'cone') {
+        iceCreamSound.play();
+        incrementScore();
+      } else if (object.type === 'squirrel') {
+        squirrelSound.play();
+        decrementLives();
+      } else if (object.type === 'flyer') {
+        flyerSound.play();
+        decrementLives();
+      } else if (object.type === 'newsstand') {
+        dpSound.play();
+        incrementLives();
       }
-
-      if (object.x < -100) {
-        removeItem(object);
-      }
+      object.image = ''; // clear image after colliding
+      removeItem(object);
     }
-  }
 
-  function incrementScore() {
-    score++;
+    if (object.x < -100) removeItem(object);
   }
+}
 
-  function decrementLives() {
-    lives--;
-    if (lives === 0) { // end game
-      pauseLoop = true;
-      gameOver();
-    }
-  }
+function incrementScore() {
+  score++;
+}
 
-  function incrementLives() {
-    lives++;
-  }
-
-  function startGame() {
-    playAllSounds();
-    pauseLoop = false;
-    pauseStart = true;
-    gameLoop();
-    document.getElementById('start').style.display = 'none';
-    document.getElementById('pause').style.display = 'block';
-  }
-
-  function pauseGame() {
-    pauseAllSounds();
+function decrementLives() {
+  lives--;
+  if (lives === 0) { // end game
     pauseLoop = true;
-    document.getElementById('pause').style.display = 'none';
-    document.getElementById('resume').style.display = 'block';
+    gameOver();
   }
+}
 
-  function resumeGame() {
-    playAllSounds();
-    pauseLoop = false;
-    gameLoop();
-    document.getElementById('resume').style.display = 'none';
-    document.getElementById('pause').style.display = 'block';
-  }
+function incrementLives() {
+  lives++;
+}
 
-  function gameOver() {
-    scooterSound.pause();
-    // darken background image by applying black overlay
-    ctx.beginPath();
-    ctx.rect(0, 0, canvasWidth, canvasHeight);
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fill();
+function startGame() {
+  playAllSounds();
+  pauseLoop = false;
+  pauseStart = true;
+  gameLoop();
+  document.getElementById('start').style.display = 'none';
+  document.getElementById('pause').style.display = 'block';
+}
 
-    ctx.fillStyle = "white";
-    ctx.font = "bold 35px Lato";
-    ctx.fillText("Game Over!" + " " + "Your High Score Is: " + score,
-    (canvas.width / 2 - 250), (canvas.height / 2 - 30));
+function pauseGame() {
+  pauseAllSounds();
+  pauseLoop = true;
+  document.getElementById('pause').style.display = 'none';
+  document.getElementById('resume').style.display = 'block';
+}
 
-    document.getElementById('start').style.display = 'block';
-    lives = 3;
-    score = 0;
-    document.getElementById('pause').style.display = 'none';
-    document.getElementById('resume').style.display = 'none';
+function resumeGame() {
+  playAllSounds();
+  pauseLoop = false;
+  gameLoop();
+  document.getElementById('resume').style.display = 'none';
+  document.getElementById('pause').style.display = 'block';
+}
 
-    maxVelocity = 12; // reset start speed
-    objects = []; // clear all objects
-  }
+function gameOver() {
+  scooterSound.pause();
+  // darken background image by applying black overlay
+  ctx.beginPath();
+  ctx.rect(0, 0, canvasWidth, canvasHeight);
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.fill();
+
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 35px Lato';
+  ctx.fillText(`Game Over! Your score is: ${score}`, canvas.width / 2 - 230, canvas.height / 2 - 60);
+
+  document.getElementById('start').style.display = 'block';
+  lives = 3;
+  score = 0;
+  document.getElementById('pause').style.display = 'none';
+  document.getElementById('resume').style.display = 'none';
+
+  maxVelocity = 12; // reset start speed
+  objects = []; // clear all objects
+}

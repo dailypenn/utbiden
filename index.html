@@ -56,10 +56,15 @@
     <hr class="section">
     <p class="intro">Have you ever wondered what it's like to be the 47th Vice President of the United States and Presidential Professor of Practice, Joseph Robinette Biden Jr? Now's your chance! Hop on your scooter and navigate Locust as you travel from Perry World House to your meeting with Amy Gutmann.</p>
 
-    <input type="image" src="assets/images/start-button.png" onclick="startGame()" id="start">
-    <canvas id="canvas"></canvas>
-    <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
-    <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume">
+    <div class="game">
+      <canvas id="canvas"></canvas>
+      <input type="image" src="assets/images/start-button.png" onclick="startGame()" id="start">
+    </div>
+    <div class="inputs">
+      <input type="image" src="assets/images/start-button.png" onclick="jump()" id="jump">
+      <input type="image" src="assets/images/pause.png" onclick="pauseGame()" id="pause">
+      <input type="image" src="assets/images/resume.png" onclick="resumeGame()" id="resume">
+    </div>
 
     <h2>How To Play</h2>
     <hr class="section">

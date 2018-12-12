@@ -91,6 +91,9 @@ span.button {
 }
 
 #start {
+  position: absolute;
+  top: calc(50% - 46px);
+  left: calc(50% - 100px);
   display: block;
   width: 200px;
   height: auto;
@@ -107,6 +110,13 @@ span.button {
 #resume {
   display: none;
   width: 75px;
+  height: auto;
+  margin: 0 auto;
+}
+
+#jump {
+  display: none;
+  width: 150px;
   height: auto;
   margin: 0 auto;
 }
@@ -130,6 +140,10 @@ span.button {
   width: 60px;
   height: auto;
   float: left;
+}
+
+.game {
+  position: relative;
 }
 
 .text-center {
